@@ -104,28 +104,26 @@ class Reflected
 
         foreach ($reflection->getParameters() as $param) {
             $paramString = '';
-
-            // Получаем тип параметра
-            if ($param->hasType()) {
-                $paramString .= $param->getType() . ' ';
-            }
-
             if ($param->isVariadic()) {
                 $paramString .= '...';
             }
 
-            // Ссылка?
             if ($param->isPassedByReference()) {
                 $paramString .= '&';
             }
 
-            // Имя переменной
             $paramString .= '$' . $param->getName();
 
-            // Значение по умолчанию
             if ($param->isDefaultValueAvailable()) {
-                $default = $param->getDefaultValue();
+                $default = (
+                    $param->isDefaultValueConstant()
+                    ? $param->getDefaultValueConstantName()
+                    : $param->getDefaultValue()
+                );
+
                 $paramString .= ' = ' . var_export($default, true);
+            } elseif ($param->isOptional()) {
+                $paramString .= ' = null';
             }
 
             $params[] = Colorizer::magenta($paramString);
