@@ -64,11 +64,12 @@ class Reflected
             $prefix .= "final";
         }
 
-        $prefix .= " class";
         if ($ref->isInterface()) {
             $prefix .= " interface";
         } elseif ($ref->isTrait()) {
             $prefix .= " trait";
+        } else {
+            $prefix .= " class";
         }
 
         $prefix = trim($prefix);
